@@ -1,22 +1,23 @@
-package springPractices.demo.API;
+package com.rensource.demo.API;
 
+import com.rensource.demo.Model.Person;
+import com.rensource.demo.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springPractices.demo.model.Person;
-import springPractices.demo.service.PersonService;
 
 import java.util.List;
 import java.util.UUID;
 
+//the below annotate the path of the API
 @RequestMapping("api/v1/person")
+//the below annotates the class as a REST controller
 @RestController
-public class  PersonController {
+public class PersonController {
+
     private final PersonService personService;
 
     @Autowired
-    public PersonController(PersonService personService){
+    public PersonController(PersonService personService) {
         this.personService = personService;
     }
 
@@ -24,20 +25,24 @@ public class  PersonController {
     public void addPerson(@RequestBody Person person){
         personService.addPerson(person);
     }
+
     @GetMapping
     public List<Person> getAllPeople(){
         return personService.getAllPeople();
     }
-    @GetMapping(path = "/{id}")
-    public Person getPersonById(@PathVariable UUID id){
-        return personService.getPersonById(id).orElse(null);
+
+    @GetMapping(path ="{id}")
+    public Person getPersonById(@PathVariable("id") UUID id){
+        return personService.getPersonById(id)
+                .orElse(null);
     }
-    @DeleteMapping(path = "/{id}")
-    public void deletePersonById(@PathVariable ("id") UUID id){
-        personService.deletePerson(id);
-    }
+
     @PutMapping(path = "{id}")
     public void updatePerson(@PathVariable("id") UUID id, @RequestBody Person personToUpdate){
         personService.updatePerson(id, personToUpdate);
+    }
+    @DeleteMapping(path = "{id}")
+    public void deletePersonById(@PathVariable("id") UUID id){
+        personService.deletePerson(id);
     }
 }
